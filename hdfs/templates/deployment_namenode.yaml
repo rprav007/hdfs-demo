@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: "{{ template "fullname" . }}-namenode"
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  serviceName: "{{ template "fullname" . }}-namenode"
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}-namenode"
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: "{{ template "fullname" . }}-namenode"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: CLUSTER_NAME
+              value: hdfs-k8s
+          ports:
+          - containerPort: {{ .Values.service.internalPort }}
+            name: {{ .Values.service.name }}
+          - containerPort: {{ .Values.service.externalPort }}
+      restartPolicy: Always

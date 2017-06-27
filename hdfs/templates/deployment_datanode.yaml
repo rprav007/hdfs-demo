@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: "{{ template "fullname" . }}-datanode"
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  serviceName: "{{ template "fullname" . }}-datanode"
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "fullname" . }}-datanode"
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: "{{ template "fullname" . }}-datanode"
+          image: "{{ .Values.image.repository_data }}:{{ .Values.image.tag }}"
+          env:
+            - name: CORE_CONF_fs_defaultFS
+              value: hdfs://{{ template "fullname" . }}-namenode-0.{{ template "fullname" . }}-namenode.default.svc.cluster.local:{{ .Values.service.internalPort }}
+          ports:
+          - containerPort: {{ .Values.service.dataPort }}
+            name: {{ .Values.service.name }}
+      restartPolicy: Always
