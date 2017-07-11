@@ -18,7 +18,7 @@ spec:
           image: "{{ .Values.image.repository_data }}:{{ .Values.image.tag }}"
           env:
             - name: CORE_CONF_fs_defaultFS
-              value: hdfs://{{ template "fullname" . }}-namenode-0.{{ template "fullname" . }}-namenode.default.svc.cluster.local:{{ .Values.service.internalPort }}
+              value: hdfs://{{ template "fullname" . }}-namenode-0.{{ template "fullname" . }}-namenode.{{ .Values.service.namespace }}.svc.cluster.local:{{ .Values.service.internalPort }}
           ports:
           - containerPort: {{ .Values.service.dataPort }}
             name: {{ .Values.service.name }}
