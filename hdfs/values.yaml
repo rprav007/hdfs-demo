@@ -13,6 +13,7 @@ service:
   dataPort: 50010
   externalPort: 50070
   internalPort: 8020
+  namespace: 
 ingress:
   enabled: false
   # Used to create Ingress record (should used with service.type: ClusterIP).
